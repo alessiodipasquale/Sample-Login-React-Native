@@ -4,9 +4,14 @@ import {Text, View, TextInput, StyleSheet, TouchableOpacity, StatusBar} from 're
 import {AsyncStorage} from 'react-native';
 import {ToastAndroid} from 'react-native';
 
+import * as io from 'socket.io-client';
+
 
 
 export default class LoginForm extends Component {
+
+  socket; 
+
     constructor(props) {
         super(props);
         this.state = {
@@ -15,14 +20,29 @@ export default class LoginForm extends Component {
         }
     }
 
+    socketConnect = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        console.log(token);
+        this.socket = io.connect('http://192.168.1.112:3000'+'/clients', { 'query': 'token=' + token });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
     _storeData = async (token) => {
         try {
           await AsyncStorage.setItem('token', token);
           ToastAndroid.show('Login riuscito !', ToastAndroid.SHORT);
-
+          await this.socketConnect().then(()=> {
+            this.socket.emit('getPlaces',undefined, response => {
+              console.log(response);
+            });
+          })
+          .catch((err) => ToastAndroid.show('Socket non connesso !', ToastAndroid.SHORT));
         } catch (error) {
             ToastAndroid.show('Errore nel salvataggio !', ToastAndroid.SHORT);
-
+            
         }
       };
 
