@@ -13,6 +13,9 @@ export default class Login extends Component {
           <View style={styles.formContainer}>
              <LoginForm />
           </View>
+          <View style={styles.signUpContainer}>
+            <Text style={styles.signUpText}>Non sei registrato?</Text><Text style={styles.signUpButton}> Registrati!</Text>
+          </View>
       </KeyboardAvoidingView>
     );
   }
@@ -31,5 +34,15 @@ const styles = StyleSheet.create({
     logo: {
         width: 100,
         height: 100
+    },
+    signUpContainer: {
+      flexDirection:'row', 
+      flexWrap:'wrap',
+      marginBottom: 30,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    signUpButton: {
+      fontWeight: 'bold'
     }
 })
